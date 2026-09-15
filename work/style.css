@@ -80,8 +80,6 @@ h3 {
 
     box-shadow:
         0 2px 8px rgba(0, 0, 0, 0.08);
-
-    overflow: hidden;
 }
 
 
@@ -116,6 +114,26 @@ input[type="number"] {
     border-radius: 8px;
 
     background: white;
+}
+
+
+/* iPhone 勤務日入力 */
+
+input[type="date"] {
+    width: calc(100% - 2px);
+    max-width: calc(100% - 2px);
+    min-width: 0;
+
+    height: 60px;
+
+    margin-right: 2px;
+
+    box-sizing: border-box;
+}
+
+
+input[type="date"]::-webkit-date-and-time-value {
+    text-align: center;
 }
 
 
@@ -165,6 +183,10 @@ input[type="number"]:focus {
     accent-color: var(--green);
 }
 
+
+/* ==========================
+   拘束時間入力
+   ========================== */
 
 .duration-input {
     display: grid;
@@ -677,14 +699,4 @@ hr {
     .menu-buttons {
         gap: 8px;
     }
-}
-
-/* 勤務日の日付入力欄 */
-input[type="date"] {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-    -webkit-appearance: none;
-    appearance: none;
 }
