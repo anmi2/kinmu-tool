@@ -14,7 +14,7 @@
         content="#16864b"
     >
 
-    <title>勤務管理</title>
+    <title>TaxiDriver'sTool</title>
 
     <link
         rel="stylesheet"
@@ -26,532 +26,183 @@
 
 <main class="container">
 
-    <h1>
-        勤務管理<span class="title-dot">.</span>
-    </h1>
+    <header class="site-header">
+
+        <h1>
+            TaxiDriver'sTool<span class="title-dot">.</span>
+        </h1>
+
+        <p class="tool-list">
+            （勤務管理 / 営業記録 / Event Map / Area Data / NextGuess）
+        </p>
+
+    </header>
 
 
-    <section class="card">
+    <section class="tools">
 
-        <h2>勤務を記録</h2>
-
-
-        <!-- 勤務日 -->
-
-        <label for="workDate">
-            勤務日
-        </label>
-
-        <div class="date-picker-wrap">
-
-            <div class="date-picker-display">
-
-                <span id="workDateText">
-                    日付を選択
-                </span>
-
-                <span
-                    class="date-picker-icon"
-                    aria-hidden="true"
-                >
-                    📅
-                </span>
-
-            </div>
-
-            <input
-                type="date"
-                id="workDate"
-                class="date-picker-native"
-                aria-label="勤務日"
-            >
-
-        </div>
-
-
-        <!-- 営収 -->
-
-        <label for="revenue">
-            営収
-        </label>
-
-        <div class="revenue-input">
-
-            <span class="yen-mark">
-                ¥
-            </span>
-
-            <input
-                type="number"
-                id="revenue"
-                min="0"
-                step="1"
-                inputmode="numeric"
-                placeholder="50000"
-            >
-
-            <span class="unit">
-                円
-            </span>
-
-        </div>
-
-
-        <!-- 入力方法 -->
-
-        <div class="input-type">
-
-            <span class="input-type-title">
-                拘束時間
-            </span>
-
-            <label class="radio-label">
-
-                <input
-                    type="radio"
-                    name="inputType"
-                    value="direct"
-                    checked
-                >
-
-                直接入力
-
-            </label>
-
-            <label class="radio-label">
-
-                <input
-                    type="radio"
-                    name="inputType"
-                    value="time"
-                >
-
-                出庫・帰庫から計算
-
-            </label>
-
-        </div>
-
-
-        <!-- 直接入力 -->
-
-        <div id="directInput">
-
-            <div class="duration-input">
-
-                <input
-                    type="number"
-                    id="directHours"
-                    min="0"
-                    max="30"
-                    inputmode="numeric"
-                    placeholder="17"
-                >
-
-                <span>時間</span>
-
-                <input
-                    type="number"
-                    id="directMinutes"
-                    min="0"
-                    max="59"
-                    inputmode="numeric"
-                    placeholder="40"
-                >
-
-                <span>分</span>
-
-            </div>
-
-        </div>
-
-
-        <!-- 出庫・帰庫入力 -->
-
-        <div
-            id="timeInput"
-            class="hidden"
+        <a
+            class="tool-row active"
+            href="work/"
         >
 
-            <label for="startTime">
-                出庫時刻
-            </label>
+            <div class="tool-main">
 
-            <input
-                type="time"
-                id="startTime"
-            >
-
-
-            <label for="endTime">
-                帰庫時刻
-            </label>
-
-            <input
-                type="time"
-                id="endTime"
-            >
-
-
-            <div class="calculated-result">
-
-                <span>
-                    今回の拘束時間
+                <span class="tool-name">
+                    勤務管理
                 </span>
 
-                <strong id="calculatedHours">
-                    --
-                </strong>
+                <span class="tool-description">
+                    営収・拘束時間・勤務状況
+                </span>
 
             </div>
+
+            <span class="arrow">
+                →
+            </span>
+
+        </a>
+
+
+        <div class="tool-row coming">
+
+            <div class="tool-main">
+
+                <span class="tool-name">
+                    営業記録
+                </span>
+
+                <span class="tool-description">
+                    日々の営業データ
+                </span>
+
+            </div>
+
+            <span class="coming-label">
+                COMING
+            </span>
 
         </div>
 
 
-        <button id="saveButton">
-            この勤務を保存
-        </button>
+        <div class="tool-row coming">
+
+            <div class="tool-main">
+
+                <span class="tool-name">
+                    Event Map
+                </span>
+
+                <span class="tool-description">
+                    イベント情報
+                </span>
+
+            </div>
+
+            <span class="coming-label">
+                COMING
+            </span>
+
+        </div>
+
+
+        <div class="tool-row coming">
+
+            <div class="tool-main">
+
+                <span class="tool-name">
+                    Area Data
+                </span>
+
+                <span class="tool-description">
+                    エリア情報
+                </span>
+
+            </div>
+
+            <span class="coming-label">
+                COMING
+            </span>
+
+        </div>
+
+
+        <div class="tool-row coming">
+
+            <div class="tool-main">
+
+                <span class="tool-name">
+                    NextGuess
+                </span>
+
+                <span class="tool-description">
+                    営業支援マップ
+                </span>
+
+            </div>
+
+            <span class="coming-label">
+                COMING
+            </span>
+
+        </div>
 
     </section>
 
 
-    <div class="menu-buttons">
+    <section class="update-section">
 
-        <button
-            class="secondary-button"
-            id="statusButton"
-        >
-            今月の状況
-        </button>
+        <h2>
+            UPDATE LOG
+        </h2>
 
-        <button
-            class="secondary-button"
-            id="historyButton"
-        >
-            勤務履歴
-        </button>
+        <div class="update-row">
 
-    </div>
+            <time datetime="2026-09-15">
+                2026.09.15
+            </time>
+
+            <p>
+                TaxiDriver'sTool トップページを作成
+            </p>
+
+        </div>
+
+        <div class="update-row">
+
+            <time datetime="2026-09-15">
+                2026.09.15
+            </time>
+
+            <p>
+                勤務管理に営収記録を追加
+            </p>
+
+        </div>
+
+        <div class="update-row">
+
+            <time datetime="2026-09-15">
+                2026.09.15
+            </time>
+
+            <p>
+                勤務履歴・月間状況表示を追加
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <footer>
+
+        TaxiDriver'sTool
+
+    </footer>
 
 </main>
-
-
-<!-- 今月状況 -->
-
-<div
-    class="modal hidden"
-    id="statusModal"
->
-
-    <div class="modal-panel">
-
-        <button
-            class="close-button"
-            data-close="statusModal"
-        >
-            ×
-        </button>
-
-
-        <h2>今月の状況</h2>
-
-        <div
-            class="period-label"
-            id="currentPeriod"
-        >
-            --
-        </div>
-
-
-        <div class="summary-row">
-
-            <span>勤務回数</span>
-
-            <strong id="workCount">
-                0 / 13
-            </strong>
-
-        </div>
-
-
-        <div class="summary-row">
-
-            <span>累計営収</span>
-
-            <strong
-                id="totalRevenue"
-                class="green-value"
-            >
-                ¥0
-            </strong>
-
-        </div>
-
-
-        <div class="summary-row">
-
-            <span>平均営収</span>
-
-            <strong id="averageRevenue">
-                ¥0
-            </strong>
-
-        </div>
-
-
-        <div class="summary-row">
-
-            <span>累計拘束時間</span>
-
-            <strong id="totalHours">
-                0時間00分
-            </strong>
-
-        </div>
-
-
-        <div class="summary-row">
-
-            <span>262時間まで残り</span>
-
-            <strong id="remainingHours">
-                262時間00分
-            </strong>
-
-        </div>
-
-
-        <hr>
-
-
-        <h3>
-            13勤務目の予測
-        </h3>
-
-
-        <div class="shift-selector">
-
-            <span class="selector-title">
-                13勤務目の基本出庫
-            </span>
-
-            <div class="shift-buttons">
-
-                <label class="shift-option">
-
-                    <input
-                        type="radio"
-                        name="finalShiftType"
-                        value="15"
-                        checked
-                    >
-
-                    <span>
-                        15:00
-                    </span>
-
-                </label>
-
-
-                <label class="shift-option">
-
-                    <input
-                        type="radio"
-                        name="finalShiftType"
-                        value="16"
-                    >
-
-                    <span>
-                        16:00
-                    </span>
-
-                </label>
-
-            </div>
-
-        </div>
-
-
-        <div id="forecast">
-            まだ勤務記録がありません。
-        </div>
-
-
-        <button
-            class="secondary-button modal-action"
-            id="previousStatusButton"
-        >
-            前月の状況を見る
-        </button>
-
-    </div>
-
-</div>
-
-
-<!-- 前月状況 -->
-
-<div
-    class="modal hidden"
-    id="previousStatusModal"
->
-
-    <div class="modal-panel">
-
-        <button
-            class="close-button"
-            data-close="previousStatusModal"
-        >
-            ×
-        </button>
-
-
-        <h2>前月の状況</h2>
-
-        <div
-            class="period-label"
-            id="previousPeriod"
-        >
-            --
-        </div>
-
-
-        <div class="summary-row">
-
-            <span>勤務回数</span>
-
-            <strong id="previousWorkCount">
-                0 / 13
-            </strong>
-
-        </div>
-
-
-        <div class="summary-row">
-
-            <span>累計営収</span>
-
-            <strong
-                id="previousTotalRevenue"
-                class="green-value"
-            >
-                ¥0
-            </strong>
-
-        </div>
-
-
-        <div class="summary-row">
-
-            <span>平均営収</span>
-
-            <strong id="previousAverageRevenue">
-                ¥0
-            </strong>
-
-        </div>
-
-
-        <div class="summary-row">
-
-            <span>累計拘束時間</span>
-
-            <strong id="previousTotalHours">
-                0時間00分
-            </strong>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- 今月履歴 -->
-
-<div
-    class="modal hidden"
-    id="historyModal"
->
-
-    <div class="modal-panel">
-
-        <button
-            class="close-button"
-            data-close="historyModal"
-        >
-            ×
-        </button>
-
-
-        <h2>
-            今月の勤務履歴
-        </h2>
-
-        <div
-            class="period-label"
-            id="historyPeriod"
-        >
-            --
-        </div>
-
-
-        <div id="workHistory">
-            勤務記録はありません。
-        </div>
-
-
-        <button
-            class="secondary-button modal-action"
-            id="previousHistoryButton"
-        >
-            前月の履歴を見る
-        </button>
-
-    </div>
-
-</div>
-
-
-<!-- 前月履歴 -->
-
-<div
-    class="modal hidden"
-    id="previousHistoryModal"
->
-
-    <div class="modal-panel">
-
-        <button
-            class="close-button"
-            data-close="previousHistoryModal"
-        >
-            ×
-        </button>
-
-
-        <h2>
-            前月の勤務履歴
-        </h2>
-
-        <div
-            class="period-label"
-            id="previousHistoryPeriod"
-        >
-            --
-        </div>
-
-
-        <div id="previousWorkHistory">
-            勤務記録はありません。
-        </div>
-
-    </div>
-
-</div>
-
-
-<script src="script.js"></script>
 
 </body>
 
