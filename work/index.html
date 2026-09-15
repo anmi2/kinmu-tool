@@ -18,7 +18,7 @@
 
     <link
         rel="stylesheet"
-        href="style.css"
+        href="style.css?v=4"
     >
 </head>
 
@@ -207,6 +207,13 @@
             勤務履歴
         </button>
 
+        <button
+            class="secondary-button graph-menu-button"
+            data-open="revenueChartModal"
+        >
+            営収グラフ
+        </button>
+
     </div>
 
 </main>
@@ -385,6 +392,94 @@
 </div>
 
 
+<!-- 営収グラフ -->
+
+<div
+    class="modal hidden"
+    id="revenueChartModal"
+>
+
+    <div class="modal-panel chart-modal-panel">
+
+        <button
+            class="close-button"
+            data-close="revenueChartModal"
+        >
+            ×
+        </button>
+
+        <h2>
+            営収グラフ
+        </h2>
+
+        <div class="chart-period-switch">
+
+            <button
+                type="button"
+                class="chart-period-button active"
+                data-chart-period="current"
+            >
+                今月
+            </button>
+
+            <button
+                type="button"
+                class="chart-period-button"
+                data-chart-period="previous"
+            >
+                前月
+            </button>
+
+        </div>
+
+        <div
+            class="period-label"
+            id="revenueChartPeriod"
+        >
+            --
+        </div>
+
+        <div class="chart-summary">
+
+            <span id="revenueChartCount">
+                0勤務
+            </span>
+
+            <strong id="revenueChartAverage">
+                平均 ¥0
+            </strong>
+
+        </div>
+
+        <div
+            class="chart-empty hidden"
+            id="revenueChartEmpty"
+        >
+            勤務記録はありません。
+        </div>
+
+        <div
+            class="chart-scroll"
+            id="revenueChartScroll"
+        >
+
+            <canvas
+                id="revenueChartCanvas"
+                role="img"
+                aria-label="勤務日ごとの営収折れ線グラフ"
+            ></canvas>
+
+        </div>
+
+        <div class="chart-note">
+            日付は勤務日順です。横にスライドして確認できます。
+        </div>
+
+    </div>
+
+</div>
+
+
 <!-- 今月の履歴 -->
 
 <div
@@ -464,7 +559,7 @@
 </div>
 
 
-<script src="script.js?v=3"></script>
+<script src="script.js?v=4"></script>
 
 </body>
 
