@@ -75,6 +75,10 @@ document.addEventListener(
             );
 
 
+        let selectedRevenueChartPeriod =
+            "current";
+
+
         // ==============================
         // モーダル
         // ==============================
@@ -100,6 +104,17 @@ document.addEventListener(
                 .remove(
                     "hidden"
                 );
+
+
+            if (
+                id ===
+                "revenueChartModal"
+            ) {
+
+                requestAnimationFrame(
+                    updateRevenueChart
+                );
+            }
         }
 
 
@@ -222,6 +237,49 @@ document.addEventListener(
                     );
                 }
             );
+
+
+        document
+            .querySelectorAll(
+                "[data-chart-period]"
+            )
+            .forEach(button => {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        selectedRevenueChartPeriod =
+                            button.dataset.chartPeriod;
+
+
+                        updateRevenueChart();
+                    }
+                );
+            });
+
+
+        window.addEventListener(
+            "resize",
+            () => {
+
+                const modal =
+                    document.getElementById(
+                        "revenueChartModal"
+                    );
+
+
+                if (
+                    modal &&
+                    !modal.classList.contains(
+                        "hidden"
+                    )
+                ) {
+
+                    updateRevenueChart();
+                }
+            }
+        );
 
 
         // ==============================
@@ -948,6 +1006,665 @@ document.addEventListener(
 
 
         // ==============================
+        // 営収グラフ
+        // ==============================
+
+        function updateRevenueChart() {
+
+            const canvas =
+                document.getElementById(
+                    "revenueChartCanvas"
+                );
+
+
+            const scroll =
+                document.getElementById(
+                    "revenueChartScroll"
+                );
+
+
+            const empty =
+                document.getElementById(
+                    "revenueChartEmpty"
+                );
+
+
+            if (
+                !canvas ||
+                !scroll ||
+                !empty
+            ) {
+
+                return;
+            }
+
+
+            const records =
+                getAllRecords();
+
+
+            const currentPeriod =
+                getWorkPeriod(
+                    new Date()
+                );
+
+
+            const previousPeriod =
+                getPreviousPeriod(
+                    currentPeriod.startDate
+                );
+
+
+            const period =
+                selectedRevenueChartPeriod ===
+                "previous"
+                    ? previousPeriod
+                    : currentPeriod;
+
+
+            const periodRecords =
+                filterRecordsByPeriod(
+                    records,
+                    period
+                )
+                    .sort(
+                        (a, b) =>
+                            a.date.localeCompare(
+                                b.date
+                            )
+                    );
+
+
+            setText(
+                "revenueChartPeriod",
+                formatPeriod(
+                    period
+                )
+            );
+
+
+            setText(
+                "revenueChartCount",
+                `${periodRecords.length}勤務`
+            );
+
+
+            setText(
+                "revenueChartAverage",
+                `平均 ${formatYen(
+                    getAverageRevenue(
+                        periodRecords
+                    )
+                )}`
+            );
+
+
+            document
+                .querySelectorAll(
+                    "[data-chart-period]"
+                )
+                .forEach(button => {
+
+                    button.classList.toggle(
+                        "active",
+                        button.dataset.chartPeriod ===
+                            selectedRevenueChartPeriod
+                    );
+                });
+
+
+            if (
+                periodRecords.length === 0
+            ) {
+
+                empty.classList.remove(
+                    "hidden"
+                );
+
+
+                scroll.classList.add(
+                    "hidden"
+                );
+
+
+                clearRevenueChart(
+                    canvas
+                );
+
+                return;
+            }
+
+
+            empty.classList.add(
+                "hidden"
+            );
+
+
+            scroll.classList.remove(
+                "hidden"
+            );
+
+
+            drawRevenueLineChart(
+                canvas,
+                scroll,
+                periodRecords
+            );
+        }
+
+
+        function clearRevenueChart(
+            canvas
+        ) {
+
+            const context =
+                canvas.getContext(
+                    "2d"
+                );
+
+
+            if (!context) {
+                return;
+            }
+
+
+            context.clearRect(
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+        }
+
+
+        function drawRevenueLineChart(
+            canvas,
+            scroll,
+            records
+        ) {
+
+            const context =
+                canvas.getContext(
+                    "2d"
+                );
+
+
+            if (!context) {
+                return;
+            }
+
+
+            const deviceScale =
+                Math.min(
+                    window.devicePixelRatio || 1,
+                    2
+                );
+
+
+            const visibleWidth =
+                Math.max(
+                    scroll.clientWidth - 2,
+                    280
+                );
+
+
+            const cssWidth =
+                Math.max(
+                    visibleWidth,
+                    620,
+                    records.length * 72
+                );
+
+
+            const cssHeight =
+                300;
+
+
+            canvas.style.width =
+                `${cssWidth}px`;
+
+
+            canvas.style.height =
+                `${cssHeight}px`;
+
+
+            canvas.width =
+                Math.round(
+                    cssWidth *
+                    deviceScale
+                );
+
+
+            canvas.height =
+                Math.round(
+                    cssHeight *
+                    deviceScale
+                );
+
+
+            context.setTransform(
+                deviceScale,
+                0,
+                0,
+                deviceScale,
+                0,
+                0
+            );
+
+
+            context.clearRect(
+                0,
+                0,
+                cssWidth,
+                cssHeight
+            );
+
+
+            const padding = {
+                top: 38,
+                right: 24,
+                bottom: 64,
+                left: 58
+            };
+
+
+            const plotWidth =
+                cssWidth -
+                padding.left -
+                padding.right;
+
+
+            const plotHeight =
+                cssHeight -
+                padding.top -
+                padding.bottom;
+
+
+            const values =
+                records.map(
+                    record =>
+                        Math.max(
+                            0,
+                            Number(
+                                record.revenue
+                            ) || 0
+                        )
+                );
+
+
+            const highestRevenue =
+                Math.max(
+                    ...values,
+                    0
+                );
+
+
+            const yStep =
+                10000;
+
+
+            const yMax =
+                Math.max(
+                    yStep,
+                    Math.ceil(
+                        highestRevenue /
+                        yStep
+                    ) *
+                    yStep
+                );
+
+
+            const yTicks =
+                4;
+
+
+            context.font =
+                '12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+
+
+            context.textBaseline =
+                "middle";
+
+
+            for (
+                let index = 0;
+                index <= yTicks;
+                index += 1
+            ) {
+
+                const ratio =
+                    index /
+                    yTicks;
+
+
+                const y =
+                    padding.top +
+                    plotHeight -
+                    plotHeight *
+                    ratio;
+
+
+                const value =
+                    Math.round(
+                        yMax *
+                        ratio
+                    );
+
+
+                context.beginPath();
+
+                context.strokeStyle =
+                    "#e2e7e4";
+
+                context.lineWidth =
+                    1;
+
+
+                context.moveTo(
+                    padding.left,
+                    y
+                );
+
+
+                context.lineTo(
+                    cssWidth -
+                    padding.right,
+                    y
+                );
+
+
+                context.stroke();
+
+
+                context.fillStyle =
+                    "#6d746f";
+
+
+                context.textAlign =
+                    "right";
+
+
+                context.fillText(
+                    formatRevenueAxis(
+                        value
+                    ),
+                    padding.left - 8,
+                    y
+                );
+            }
+
+
+            const getX =
+                index => {
+
+                    if (
+                        records.length === 1
+                    ) {
+
+                        return (
+                            padding.left +
+                            plotWidth /
+                            2
+                        );
+                    }
+
+
+                    return (
+                        padding.left +
+                        plotWidth *
+                        index /
+                        (
+                            records.length -
+                            1
+                        )
+                    );
+                };
+
+
+            const getY =
+                value =>
+                    padding.top +
+                    plotHeight -
+                    plotHeight *
+                    value /
+                    yMax;
+
+
+            context.beginPath();
+
+            context.strokeStyle =
+                "#16864b";
+
+            context.lineWidth =
+                3;
+
+            context.lineJoin =
+                "round";
+
+            context.lineCap =
+                "round";
+
+
+            records.forEach(
+                (
+                    record,
+                    index
+                ) => {
+
+                    const x =
+                        getX(
+                            index
+                        );
+
+
+                    const y =
+                        getY(
+                            values[index]
+                        );
+
+
+                    if (
+                        index === 0
+                    ) {
+
+                        context.moveTo(
+                            x,
+                            y
+                        );
+
+                    } else {
+
+                        context.lineTo(
+                            x,
+                            y
+                        );
+                    }
+                }
+            );
+
+
+            context.stroke();
+
+
+            records.forEach(
+                (
+                    record,
+                    index
+                ) => {
+
+                    const x =
+                        getX(
+                            index
+                        );
+
+
+                    const y =
+                        getY(
+                            values[index]
+                        );
+
+
+                    context.beginPath();
+
+                    context.fillStyle =
+                        "#16864b";
+
+
+                    context.arc(
+                        x,
+                        y,
+                        5,
+                        0,
+                        Math.PI * 2
+                    );
+
+
+                    context.fill();
+
+
+                    context.fillStyle =
+                        "#202422";
+
+
+                    context.textAlign =
+                        "center";
+
+
+                    context.textBaseline =
+                        "bottom";
+
+
+                    context.font =
+                        '700 11px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+
+
+                    context.fillText(
+                        formatRevenuePoint(
+                            values[index]
+                        ),
+                        x,
+                        Math.max(
+                            14,
+                            y - 10
+                        )
+                    );
+
+
+                    context.fillStyle =
+                        "#6d746f";
+
+
+                    context.textBaseline =
+                        "top";
+
+
+                    context.font =
+                        '12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+
+
+                    context.fillText(
+                        formatChartDate(
+                            record.date
+                        ),
+                        x,
+                        padding.top +
+                        plotHeight +
+                        16
+                    );
+                }
+            );
+        }
+
+
+        function formatRevenueAxis(
+            value
+        ) {
+
+            if (
+                value >= 10000
+            ) {
+
+                const units =
+                    value /
+                    10000;
+
+
+                return (
+                    Number.isInteger(
+                        units
+                    )
+                        ? `${units}万`
+                        : `${units.toFixed(
+                            1
+                        )}万`
+                );
+            }
+
+
+            return value.toLocaleString(
+                "ja-JP"
+            );
+        }
+
+
+        function formatRevenuePoint(
+            value
+        ) {
+
+            if (
+                value >= 10000
+            ) {
+
+                return (
+                    `${(
+                        value /
+                        10000
+                    ).toFixed(
+                        1
+                    )}万`
+                );
+            }
+
+
+            return value.toLocaleString(
+                "ja-JP"
+            );
+        }
+
+
+        function formatChartDate(
+            dateText
+        ) {
+
+            const date =
+                new Date(
+                    dateText +
+                    "T00:00:00"
+                );
+
+
+            const weekdays = [
+                "日",
+                "月",
+                "火",
+                "水",
+                "木",
+                "金",
+                "土"
+            ];
+
+
+            return (
+                `${date.getMonth() + 1}/` +
+                `${date.getDate()}` +
+                `(${weekdays[
+                    date.getDay()
+                ]})`
+            );
+        }
+
+
+        // ==============================
         // 全表示更新
         // ==============================
 
@@ -1115,6 +1832,23 @@ document.addEventListener(
             updateForecast(
                 currentRecords
             );
+
+
+            const revenueChartModal =
+                document.getElementById(
+                    "revenueChartModal"
+                );
+
+
+            if (
+                revenueChartModal &&
+                !revenueChartModal.classList.contains(
+                    "hidden"
+                )
+            ) {
+
+                updateRevenueChart();
+            }
         }
 
 
