@@ -272,3 +272,87 @@ footer {
         grid-template-columns: 76px 1fr;
     }
 }
+
+/* ==========================
+   TaxiDriver'sTool theme
+   ========================== */
+
+:root {
+    --green: #16864b;
+    --green-dark: #0f6539;
+    --green-soft: #edf7f1;
+}
+
+
+/* 入力欄のスマホはみ出し対策 */
+
+input[type="date"],
+input[type="time"],
+input[type="number"] {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+}
+
+input[type="date"] {
+    display: block;
+}
+
+
+/* メイン保存 */
+
+#saveButton {
+    background: var(--green);
+    color: white;
+}
+
+#saveButton:active {
+    background: var(--green-dark);
+}
+
+
+/* 15時 / 16時選択 */
+
+.shift-option input:checked + span {
+    background: var(--green);
+    color: white;
+
+    border-color: var(--green);
+}
+
+
+/* 修正保存 */
+
+.edit-button,
+.edit-save-button {
+    background: var(--green);
+    color: white;
+}
+
+
+/* 状況・履歴ボタン */
+
+.secondary-button {
+    color: var(--green-dark);
+    border-color: #b8d9c6;
+}
+
+
+/* 予測部分 */
+
+.forecast-box {
+    background: var(--green-soft);
+}
+
+
+/* 勤務管理タイトル */
+
+.container > h1 {
+    color: #171a18;
+}
+
+.container > h1::after {
+    content: ".";
+
+    color: var(--green);
+}
