@@ -336,6 +336,11 @@ button {
 }
 
 
+.graph-menu-button {
+    grid-column: 1 / -1;
+}
+
+
 .secondary-button {
     background: var(--white);
 
@@ -589,6 +594,121 @@ hr {
     font-size: 13px;
 
     line-height: 1.6;
+}
+
+
+/* 営収グラフ */
+
+.chart-modal-panel {
+    max-width: 760px;
+}
+
+
+.chart-period-switch {
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1fr;
+
+    gap: 8px;
+
+    margin-bottom: 12px;
+}
+
+
+.chart-period-button {
+    padding: 10px;
+
+    background: var(--white);
+    color: var(--text);
+
+    border:
+        1px solid
+        var(--border);
+}
+
+
+.chart-period-button.active {
+    background: var(--green);
+    color: var(--white);
+
+    border-color: var(--green);
+}
+
+
+.chart-summary {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 12px;
+
+    font-size: 14px;
+}
+
+
+.chart-summary strong {
+    color: var(--green);
+
+    font-size: 16px;
+}
+
+
+.chart-scroll {
+    width: 100%;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    padding: 4px 0 8px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 10px;
+
+    background: var(--white);
+
+    -webkit-overflow-scrolling: touch;
+}
+
+
+#revenueChartCanvas {
+    display: block;
+
+    height: 300px;
+}
+
+
+.chart-empty {
+    padding: 28px 14px;
+
+    border:
+        1px dashed
+        var(--border);
+
+    border-radius: 10px;
+
+    background: var(--background);
+
+    color: var(--sub-text);
+
+    text-align: center;
+}
+
+
+.chart-note {
+    margin-top: 10px;
+
+    color: var(--sub-text);
+
+    font-size: 12px;
+    line-height: 1.5;
 }
 
 
