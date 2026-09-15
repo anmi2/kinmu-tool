@@ -1,82 +1,124 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#16864b"
+    >
 
     <title>勤務管理</title>
 
-    <link rel="stylesheet" href="style.css?v=2">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 </head>
 
 <body>
 
 <main class="container">
 
-    <h1>勤務管理</h1>
+    <h1>
+        勤務管理<span class="title-dot">.</span>
+    </h1>
 
     <section class="card">
 
         <h2>勤務を記録</h2>
 
-       <label for="workDate">勤務日</label>
+        <label for="workDate">
+            勤務日
+        </label>
 
-<div class="date-picker-wrap">
+        <div class="date-picker-wrap">
 
-    <div
-        class="date-picker-display"
-        id="workDateDisplay"
-    >
-        <span id="workDateText">
-            日付を選択
-        </span>
+            <div class="date-picker-display">
 
-        <span class="date-picker-icon">
-            📅
-        </span>
-    </div>
+                <span id="workDateText">
+                    日付を選択
+                </span>
 
-    <input
-        type="date"
-        id="workDate"
-        class="date-picker-native"
-    >
+                <span class="date-picker-icon">
+                    📅
+                </span>
 
-</div>
+            </div>
 
+            <input
+                type="date"
+                id="workDate"
+                class="date-picker-native"
+            >
+
+        </div>
+
+        <label for="revenue">
+            営収
+        </label>
+
+        <div class="revenue-input">
+
+            <span class="yen-mark">
+                ¥
+            </span>
+
+            <input
+                type="number"
+                id="revenue"
+                min="0"
+                step="1"
+                inputmode="numeric"
+                placeholder="50000"
+            >
+
+            <span class="unit">
+                円
+            </span>
+
+        </div>
 
         <div class="input-type">
 
             <span class="input-type-title">
-                入力方法
+                拘束時間
             </span>
 
             <label class="radio-label">
+
                 <input
                     type="radio"
                     name="inputType"
                     value="direct"
                     checked
                 >
-                拘束時間を直接入力
+
+                直接入力
+
             </label>
 
             <label class="radio-label">
+
                 <input
                     type="radio"
                     name="inputType"
                     value="time"
                 >
+
                 出庫・帰庫から計算
+
             </label>
 
         </div>
 
-
-        <!-- 直接入力 -->
         <div id="directInput">
-
-            <label>拘束時間</label>
 
             <div class="duration-input">
 
@@ -106,8 +148,6 @@
 
         </div>
 
-
-        <!-- 出庫帰庫入力 -->
         <div
             id="timeInput"
             class="hidden"
@@ -122,7 +162,6 @@
                 id="startTime"
             >
 
-
             <label for="endTime">
                 帰庫時刻
             </label>
@@ -132,10 +171,11 @@
                 id="endTime"
             >
 
-
             <div class="calculated-result">
 
-                <span>今回の拘束時間</span>
+                <span>
+                    今回の拘束時間
+                </span>
 
                 <strong id="calculatedHours">
                     --
@@ -145,28 +185,26 @@
 
         </div>
 
-
         <button id="saveButton">
             この勤務を保存
         </button>
 
     </section>
 
-
     <div class="menu-buttons">
 
         <button
             class="secondary-button"
-            id="statusButton"
+            data-open="statusModal"
         >
-            今月の状況を見る
+            今月の状況
         </button>
 
         <button
             class="secondary-button"
-            id="historyButton"
+            data-open="historyModal"
         >
-            勤務履歴を見る
+            勤務履歴
         </button>
 
     </div>
@@ -174,9 +212,7 @@
 </main>
 
 
-<!-- ==========================
-     今月状況モーダル
-     ========================== -->
+<!-- 今月の状況 -->
 
 <div
     class="modal hidden"
@@ -192,8 +228,9 @@
             ×
         </button>
 
-
-        <h2>今月の状況</h2>
+        <h2>
+            今月の状況
+        </h2>
 
         <div
             class="period-label"
@@ -202,44 +239,41 @@
             --
         </div>
 
-
         <div class="summary-row">
-
             <span>勤務回数</span>
-
-            <strong id="workCount">
-                0 / 13
-            </strong>
-
+            <strong id="workCount">0 / 13</strong>
         </div>
 
+        <div class="summary-row">
+            <span>累計営収</span>
+            <strong
+                id="totalRevenue"
+                class="green-value"
+            >
+                ¥0
+            </strong>
+        </div>
 
         <div class="summary-row">
+            <span>平均営収</span>
+            <strong id="averageRevenue">¥0</strong>
+        </div>
 
+        <div class="summary-row">
             <span>累計拘束時間</span>
-
-            <strong id="totalHours">
-                0時間00分
-            </strong>
-
+            <strong id="totalHours">0時間00分</strong>
         </div>
-
 
         <div class="summary-row">
-
             <span>262時間まで残り</span>
-
-            <strong id="remainingHours">
-                262時間00分
-            </strong>
-
+            <strong id="remainingHours">262時間00分</strong>
         </div>
-
 
         <hr>
 
-
-        <h3>13勤務目の予測</h3>
+        <h3>
+            13勤務目の予測
+        </h3>
 
         <div class="shift-selector">
 
@@ -250,33 +284,37 @@
             <div class="shift-buttons">
 
                 <label class="shift-option">
+
                     <input
                         type="radio"
                         name="finalShiftType"
                         value="15"
                         checked
                     >
+
                     <span>15:00</span>
+
                 </label>
 
                 <label class="shift-option">
+
                     <input
                         type="radio"
                         name="finalShiftType"
                         value="16"
                     >
+
                     <span>16:00</span>
+
                 </label>
 
             </div>
 
         </div>
 
-
         <div id="forecast">
             まだ勤務記録がありません。
         </div>
-
 
         <button
             class="secondary-button modal-action"
@@ -290,9 +328,7 @@
 </div>
 
 
-<!-- ==========================
-     前月状況
-     ========================== -->
+<!-- 前月の状況 -->
 
 <div
     class="modal hidden"
@@ -308,8 +344,9 @@
             ×
         </button>
 
-
-        <h2>前月の状況</h2>
+        <h2>
+            前月の状況
+        </h2>
 
         <div
             class="period-label"
@@ -318,26 +355,29 @@
             --
         </div>
 
-
         <div class="summary-row">
-
             <span>勤務回数</span>
-
-            <strong id="previousWorkCount">
-                0 / 13
-            </strong>
-
+            <strong id="previousWorkCount">0 / 13</strong>
         </div>
 
+        <div class="summary-row">
+            <span>累計営収</span>
+            <strong
+                id="previousTotalRevenue"
+                class="green-value"
+            >
+                ¥0
+            </strong>
+        </div>
 
         <div class="summary-row">
+            <span>平均営収</span>
+            <strong id="previousAverageRevenue">¥0</strong>
+        </div>
 
+        <div class="summary-row">
             <span>累計拘束時間</span>
-
-            <strong id="previousTotalHours">
-                0時間00分
-            </strong>
-
+            <strong id="previousTotalHours">0時間00分</strong>
         </div>
 
     </div>
@@ -345,9 +385,7 @@
 </div>
 
 
-<!-- ==========================
-     今月履歴
-     ========================== -->
+<!-- 今月の履歴 -->
 
 <div
     class="modal hidden"
@@ -363,8 +401,9 @@
             ×
         </button>
 
-
-        <h2>今月の勤務履歴</h2>
+        <h2>
+            今月の勤務履歴
+        </h2>
 
         <div
             class="period-label"
@@ -373,11 +412,9 @@
             --
         </div>
 
-
         <div id="workHistory">
             勤務記録はありません。
         </div>
-
 
         <button
             class="secondary-button modal-action"
@@ -391,9 +428,7 @@
 </div>
 
 
-<!-- ==========================
-     前月履歴
-     ========================== -->
+<!-- 前月の履歴 -->
 
 <div
     class="modal hidden"
@@ -409,8 +444,9 @@
             ×
         </button>
 
-
-        <h2>前月の勤務履歴</h2>
+        <h2>
+            前月の勤務履歴
+        </h2>
 
         <div
             class="period-label"
@@ -418,7 +454,6 @@
         >
             --
         </div>
-
 
         <div id="previousWorkHistory">
             勤務記録はありません。
@@ -429,7 +464,8 @@
 </div>
 
 
-<script src="script.js"></script>
+<script src="script.js?v=3"></script>
 
 </body>
+
 </html>
