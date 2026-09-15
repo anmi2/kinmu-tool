@@ -18,7 +18,7 @@
 
     <link
         rel="stylesheet"
-        href="style.css?v=4"
+        href="style.css?v=5"
     >
 </head>
 
@@ -218,6 +218,7 @@
 
 </main>
 
+
 <!-- 右下ヘルプボタン -->
 
 <button
@@ -228,7 +229,8 @@
 >
     ?
 </button>
-    
+
+
 <!-- 今月の状況 -->
 
 <div
@@ -263,6 +265,7 @@
 
         <div class="summary-row">
             <span>累計営収</span>
+
             <strong
                 id="totalRevenue"
                 class="green-value"
@@ -379,6 +382,7 @@
 
         <div class="summary-row">
             <span>累計営収</span>
+
             <strong
                 id="previousTotalRevenue"
                 class="green-value"
@@ -482,7 +486,8 @@
         </div>
 
         <div class="chart-note">
-            日付は勤務日順です。横にスライドして確認できます。
+            横軸は1〜13勤務目で固定表示します。
+            記録済みの勤務には日付と曜日を表示します。
         </div>
 
     </div>
@@ -563,6 +568,37 @@
         <div id="previousWorkHistory">
             勤務記録はありません。
         </div>
+
+    </div>
+
+</div>
+
+
+<!-- 使い方ガイド -->
+
+<div
+    class="modal hidden"
+    id="guideModal"
+>
+
+    <div class="modal-panel guide-modal-panel">
+
+        <button
+            class="close-button"
+            data-close="guideModal"
+        >
+            ×
+        </button>
+
+        <h2>
+            使い方ガイド
+        </h2>
+
+        <img
+            src="guide.png"
+            alt="TaxiDriver's Tool 使い方ガイド"
+            class="guide-image"
+        >
 
     </div>
 
