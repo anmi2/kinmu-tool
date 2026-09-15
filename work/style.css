@@ -678,3 +678,13 @@ hr {
         gap: 8px;
     }
 }
+
+/* 勤務日の日付入力欄 */
+input[type="date"] {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    appearance: none;
+}
