@@ -700,3 +700,57 @@ hr {
         gap: 8px;
     }
 }
+
+/* ==========================
+   勤務日カレンダー
+   ========================== */
+
+.date-picker-wrap {
+    position: relative;
+
+    width: 100%;
+    height: 54px;
+}
+
+
+.date-picker-display {
+    position: absolute;
+
+    inset: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 16px;
+
+    background: white;
+
+    border: 1px solid #ccc;
+    border-radius: 8px;
+
+    font-size: 17px;
+}
+
+
+.date-picker-icon {
+    font-size: 18px;
+}
+
+
+.date-picker-native {
+    position: absolute !important;
+
+    inset: 0 !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    opacity: 0;
+
+    cursor: pointer;
+}
