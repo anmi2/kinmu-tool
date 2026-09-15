@@ -1,1 +1,12 @@
-
+{
+    "name": "TaxiDriver'sTool",
+    "short_name": "TaxiTool",
+    "description": "Taxi Driver Support Tools",
+    "start_url": "/kinmu-tool/",
+    "scope": "/kinmu-tool/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#16864b",
+    "orientation": "portrait",
+    "lang": "ja"
+}
