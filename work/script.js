@@ -2040,3 +2040,45 @@ function formatDate(
 // ==============================
 
 updateAllDisplays();
+
+/* ==========================
+   勤務日表示
+   ========================== */
+
+const workDateInput =
+    document.getElementById("workDate");
+
+const workDateText =
+    document.getElementById("workDateText");
+
+
+function updateWorkDateDisplay() {
+
+    if (!workDateInput.value) {
+
+        workDateText.textContent =
+            "日付を選択";
+
+        return;
+    }
+
+
+    const [
+        year,
+        month,
+        day
+    ] = workDateInput.value.split("-");
+
+
+    workDateText.textContent =
+        `${year}/${month}/${day}`;
+}
+
+
+workDateInput.addEventListener(
+    "change",
+    updateWorkDateDisplay
+);
+
+
+updateWorkDateDisplay();
