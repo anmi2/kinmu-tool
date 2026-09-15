@@ -2,6 +2,10 @@
 // 基本設定
 // ==============================
 
+const STORAGE_KEY =
+    "workRecordsV2";
+
+
 const MONTHLY_LIMIT_MINUTES =
     262 * 60;
 
@@ -24,19 +28,87 @@ const TWELVE_SHIFT_TARGET_MINUTES =
 // ==============================
 
 const saveButton =
-    document.getElementById("saveButton");
+    document.getElementById(
+        "saveButton"
+    );
+
+
+const workDateInput =
+    document.getElementById(
+        "workDate"
+    );
+
+
+const workDateText =
+    document.getElementById(
+        "workDateText"
+    );
+
+
+const revenueInput =
+    document.getElementById(
+        "revenue"
+    );
+
 
 const directInput =
-    document.getElementById("directInput");
+    document.getElementById(
+        "directInput"
+    );
+
 
 const timeInput =
-    document.getElementById("timeInput");
+    document.getElementById(
+        "timeInput"
+    );
+
 
 const startTimeInput =
-    document.getElementById("startTime");
+    document.getElementById(
+        "startTime"
+    );
+
 
 const endTimeInput =
-    document.getElementById("endTime");
+    document.getElementById(
+        "endTime"
+    );
+
+
+// ==============================
+// 勤務日表示
+// ==============================
+
+function updateWorkDateDisplay() {
+
+    if (!workDateInput.value) {
+
+        workDateText.textContent =
+            "日付を選択";
+
+        return;
+    }
+
+
+    const [
+        year,
+        month,
+        day
+    ] =
+        workDateInput
+            .value
+            .split("-");
+
+
+    workDateText.textContent =
+        `${year}/${month}/${day}`;
+}
+
+
+workDateInput.addEventListener(
+    "change",
+    updateWorkDateDisplay
+);
 
 
 // ==============================
@@ -57,25 +129,36 @@ document
                     getInputType();
 
 
-                if (type === "direct") {
+                if (
+                    type ===
+                    "direct"
+                ) {
 
-                    directInput.classList.remove(
-                        "hidden"
-                    );
+                    directInput
+                        .classList
+                        .remove(
+                            "hidden"
+                        );
 
-                    timeInput.classList.add(
-                        "hidden"
-                    );
+                    timeInput
+                        .classList
+                        .add(
+                            "hidden"
+                        );
 
                 } else {
 
-                    directInput.classList.add(
-                        "hidden"
-                    );
+                    directInput
+                        .classList
+                        .add(
+                            "hidden"
+                        );
 
-                    timeInput.classList.remove(
-                        "hidden"
-                    );
+                    timeInput
+                        .classList
+                        .remove(
+                            "hidden"
+                        );
 
                     calculateFromTimes();
                 }
@@ -85,13 +168,14 @@ document
 
 
 // ==============================
-// 出庫帰庫から自動計算
+// 出庫・帰庫から自動計算
 // ==============================
 
 startTimeInput.addEventListener(
     "input",
     calculateFromTimes
 );
+
 
 endTimeInput.addEventListener(
     "input",
@@ -108,11 +192,17 @@ function calculateFromTimes() {
         endTimeInput.value;
 
 
-    if (!startTime || !endTime) {
+    if (
+        !startTime ||
+        !endTime
+    ) {
 
-        document.getElementById(
-            "calculatedHours"
-        ).textContent = "--";
+        document
+            .getElementById(
+                "calculatedHours"
+            )
+            .textContent =
+                "--";
 
         return null;
     }
@@ -125,10 +215,14 @@ function calculateFromTimes() {
         );
 
 
-    document.getElementById(
-        "calculatedHours"
-    ).textContent =
-        formatMinutes(minutes);
+    document
+        .getElementById(
+            "calculatedHours"
+        )
+        .textContent =
+            formatMinutes(
+                minutes
+            );
 
 
     return minutes;
@@ -136,7 +230,8 @@ function calculateFromTimes() {
 
 
 // ==============================
-// 出庫帰庫 → 拘束時間
+// 出庫・帰庫 → 拘束時間
+// 前20分 + 後20分
 // ==============================
 
 function calculateWorkMinutes(
@@ -144,13 +239,19 @@ function calculateWorkMinutes(
     endTime
 ) {
 
-    const [startHour, startMinute] =
+    const [
+        startHour,
+        startMinute
+    ] =
         startTime
             .split(":")
             .map(Number);
 
 
-    const [endHour, endMinute] =
+    const [
+        endHour,
+        endMinute
+    ] =
         endTime
             .split(":")
             .map(Number);
@@ -166,7 +267,9 @@ function calculateWorkMinutes(
         endMinute;
 
 
-    if (end <= start) {
+    if (
+        end <= start
+    ) {
 
         end +=
             24 * 60;
@@ -181,7 +284,7 @@ function calculateWorkMinutes(
 
 
 // ==============================
-// 新規保存
+// 保存
 // ==============================
 
 saveButton.addEventListener(
@@ -189,9 +292,7 @@ saveButton.addEventListener(
     () => {
 
         const workDate =
-            document.getElementById(
-                "workDate"
-            ).value;
+            workDateInput.value;
 
 
         if (!workDate) {
@@ -204,46 +305,81 @@ saveButton.addEventListener(
         }
 
 
+        const revenueValue =
+            revenueInput.value;
+
+
+        const revenue =
+            Number(
+                revenueValue
+            );
+
+
+        if (
+            revenueValue === "" ||
+            !Number.isFinite(
+                revenue
+            ) ||
+            revenue < 0
+        ) {
+
+            alert(
+                "営収を正しく入力してください。"
+            );
+
+            return;
+        }
+
+
         const inputType =
             getInputType();
 
 
         let minutes;
 
-        let startTime =
-            null;
 
-        let endTime =
-            null;
-
-
-        if (inputType === "direct") {
+        if (
+            inputType ===
+            "direct"
+        ) {
 
             const hoursValue =
-                document.getElementById(
-                    "directHours"
-                ).value;
+                document
+                    .getElementById(
+                        "directHours"
+                    )
+                    .value;
 
 
             const minutesValue =
-                document.getElementById(
-                    "directMinutes"
-                ).value;
+                document
+                    .getElementById(
+                        "directMinutes"
+                    )
+                    .value;
 
 
             const hours =
-                Number(hoursValue);
+                Number(
+                    hoursValue
+                );
 
 
             const mins =
-                Number(minutesValue);
+                Number(
+                    minutesValue
+                );
 
 
             if (
                 hoursValue === "" ||
                 minutesValue === "" ||
-                !Number.isFinite(hours) ||
-                !Number.isFinite(mins) ||
+                !Number.isFinite(
+                    hours
+                ) ||
+                !Number.isFinite(
+                    mins
+                ) ||
                 hours < 0 ||
                 mins < 0 ||
                 mins > 59 ||
@@ -271,7 +407,9 @@ saveButton.addEventListener(
                 calculateFromTimes();
 
 
-            if (minutes === null) {
+            if (
+                minutes === null
+            ) {
 
                 alert(
                     "出庫時刻と帰庫時刻を入力してください。"
@@ -279,14 +417,6 @@ saveButton.addEventListener(
 
                 return;
             }
-
-
-            startTime =
-                startTimeInput.value;
-
-
-            endTime =
-                endTimeInput.value;
         }
 
 
@@ -294,32 +424,84 @@ saveButton.addEventListener(
             getAllRecords();
 
 
-        records.push({
-
-            id:
-                Date.now(),
-
-            date:
-                workDate,
-
-            inputType:
-                inputType,
-
-            startTime:
-                startTime,
-
-            endTime:
-                endTime,
-
-            minutes:
-                minutes
-
-        });
+        const duplicate =
+            records.some(
+                record =>
+                    record.date ===
+                    workDate
+            );
 
 
-        saveAllRecords(
-            records
-        );
+        if (duplicate) {
+
+            const overwrite =
+                confirm(
+                    "この勤務日の記録がすでにあります。\n既存の記録を削除して保存し直しますか？"
+                );
+
+
+            if (!overwrite) {
+
+                return;
+            }
+
+
+            const filtered =
+                records.filter(
+                    record =>
+                        record.date !==
+                        workDate
+                );
+
+
+            filtered.push({
+                id:
+                    Date.now(),
+
+                date:
+                    workDate,
+
+                revenue:
+                    Math.round(
+                        revenue
+                    ),
+
+                minutes:
+                    Math.round(
+                        minutes
+                    )
+            });
+
+
+            saveAllRecords(
+                filtered
+            );
+
+        } else {
+
+            records.push({
+                id:
+                    Date.now(),
+
+                date:
+                    workDate,
+
+                revenue:
+                    Math.round(
+                        revenue
+                    ),
+
+                minutes:
+                    Math.round(
+                        minutes
+                    )
+            });
+
+
+            saveAllRecords(
+                records
+            );
+        }
 
 
         updateAllDisplays();
@@ -340,9 +522,11 @@ saveButton.addEventListener(
 
 function getInputType() {
 
-    return document.querySelector(
-        'input[name="inputType"]:checked'
-    ).value;
+    return document
+        .querySelector(
+            'input[name="inputType"]:checked'
+        )
+        .value;
 }
 
 
@@ -352,24 +536,40 @@ function getInputType() {
 
 function clearInputs() {
 
-    document.getElementById(
-        "directHours"
-    ).value = "";
+    revenueInput.value =
+        "";
 
 
-    document.getElementById(
-        "directMinutes"
-    ).value = "";
+    document
+        .getElementById(
+            "directHours"
+        )
+        .value =
+            "";
 
 
-    startTimeInput.value = "";
+    document
+        .getElementById(
+            "directMinutes"
+        )
+        .value =
+            "";
 
-    endTimeInput.value = "";
+
+    startTimeInput.value =
+        "";
 
 
-    document.getElementById(
-        "calculatedHours"
-    ).textContent = "--";
+    endTimeInput.value =
+        "";
+
+
+    document
+        .getElementById(
+            "calculatedHours"
+        )
+        .textContent =
+            "--";
 }
 
 
@@ -377,68 +577,76 @@ function clearInputs() {
 // モーダル
 // ==============================
 
-document.getElementById(
-    "statusButton"
-).addEventListener(
-    "click",
-    () => {
+document
+    .getElementById(
+        "statusButton"
+    )
+    .addEventListener(
+        "click",
+        () => {
 
-        updateAllDisplays();
+            updateAllDisplays();
 
-        openModal(
-            "statusModal"
-        );
-    }
-);
-
-
-document.getElementById(
-    "historyButton"
-).addEventListener(
-    "click",
-    () => {
-
-        updateAllDisplays();
-
-        openModal(
-            "historyModal"
-        );
-    }
-);
+            openModal(
+                "statusModal"
+            );
+        }
+    );
 
 
-document.getElementById(
-    "previousStatusButton"
-).addEventListener(
-    "click",
-    () => {
+document
+    .getElementById(
+        "historyButton"
+    )
+    .addEventListener(
+        "click",
+        () => {
 
-        closeModal(
-            "statusModal"
-        );
+            updateAllDisplays();
 
-        openModal(
-            "previousStatusModal"
-        );
-    }
-);
+            openModal(
+                "historyModal"
+            );
+        }
+    );
 
 
-document.getElementById(
-    "previousHistoryButton"
-).addEventListener(
-    "click",
-    () => {
+document
+    .getElementById(
+        "previousStatusButton"
+    )
+    .addEventListener(
+        "click",
+        () => {
 
-        closeModal(
-            "historyModal"
-        );
+            closeModal(
+                "statusModal"
+            );
 
-        openModal(
-            "previousHistoryModal"
-        );
-    }
-);
+            openModal(
+                "previousStatusModal"
+            );
+        }
+    );
+
+
+document
+    .getElementById(
+        "previousHistoryButton"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            closeModal(
+                "historyModal"
+            );
+
+            openModal(
+                "previousHistoryModal"
+            );
+        }
+    );
 
 
 document
@@ -459,24 +667,10 @@ document
     });
 
 
-function openModal(id) {
-
-    document
-        .getElementById(id)
-        .classList.remove("hidden");
-}
-
-
-function closeModal(id) {
-
-    document
-        .getElementById(id)
-        .classList.add("hidden");
-}
-
-
 document
-    .querySelectorAll(".modal")
+    .querySelectorAll(
+        ".modal"
+    )
     .forEach(modal => {
 
         modal.addEventListener(
@@ -484,16 +678,41 @@ document
             event => {
 
                 if (
-                    event.target === modal
+                    event.target ===
+                    modal
                 ) {
 
-                    modal.classList.add(
-                        "hidden"
-                    );
+                    modal
+                        .classList
+                        .add(
+                            "hidden"
+                        );
                 }
             }
         );
     });
+
+
+function openModal(id) {
+
+    document
+        .getElementById(id)
+        .classList
+        .remove(
+            "hidden"
+        );
+}
+
+
+function closeModal(id) {
+
+    document
+        .getElementById(id)
+        .classList
+        .add(
+            "hidden"
+        );
+}
 
 
 // ==============================
@@ -508,10 +727,7 @@ document
 
         radio.addEventListener(
             "change",
-            () => {
-
-                updateAllDisplays();
-            }
+            updateAllDisplays
         );
     });
 
@@ -531,7 +747,9 @@ function updateAllDisplays() {
 
 
     const currentPeriod =
-        getWorkPeriod(today);
+        getWorkPeriod(
+            today
+        );
 
 
     const previousPeriod =
@@ -554,92 +772,164 @@ function updateAllDisplays() {
         );
 
 
-    const currentTotal =
+    const currentTotalMinutes =
         getTotalMinutes(
             currentRecords
         );
 
 
-    const previousTotal =
+    const previousTotalMinutes =
         getTotalMinutes(
+            previousRecords
+        );
+
+
+    const currentRevenue =
+        getTotalRevenue(
+            currentRecords
+        );
+
+
+    const previousRevenue =
+        getTotalRevenue(
             previousRecords
         );
 
 
     // 今月
 
-    document.getElementById(
-        "currentPeriod"
-    ).textContent =
-        formatPeriod(
-            currentPeriod
-        );
+    document
+        .getElementById(
+            "currentPeriod"
+        )
+        .textContent =
+            formatPeriod(
+                currentPeriod
+            );
 
 
-    document.getElementById(
-        "historyPeriod"
-    ).textContent =
-        formatPeriod(
-            currentPeriod
-        );
+    document
+        .getElementById(
+            "historyPeriod"
+        )
+        .textContent =
+            formatPeriod(
+                currentPeriod
+            );
 
 
-    document.getElementById(
-        "workCount"
-    ).textContent =
-        `${currentRecords.length} / 13`;
+    document
+        .getElementById(
+            "workCount"
+        )
+        .textContent =
+            `${currentRecords.length} / 13`;
 
 
-    document.getElementById(
-        "totalHours"
-    ).textContent =
-        formatMinutes(
-            currentTotal
-        );
+    document
+        .getElementById(
+            "totalRevenue"
+        )
+        .textContent =
+            formatYen(
+                currentRevenue
+            );
 
 
-    document.getElementById(
-        "remainingHours"
-    ).textContent =
-        formatMinutes(
-            MONTHLY_LIMIT_MINUTES -
-            currentTotal
-        );
+    document
+        .getElementById(
+            "averageRevenue"
+        )
+        .textContent =
+            formatYen(
+                getAverageRevenue(
+                    currentRecords
+                )
+            );
+
+
+    document
+        .getElementById(
+            "totalHours"
+        )
+        .textContent =
+            formatMinutes(
+                currentTotalMinutes
+            );
+
+
+    document
+        .getElementById(
+            "remainingHours"
+        )
+        .textContent =
+            formatMinutes(
+                MONTHLY_LIMIT_MINUTES -
+                currentTotalMinutes
+            );
 
 
     // 前月
 
-    document.getElementById(
-        "previousPeriod"
-    ).textContent =
-        formatPeriod(
-            previousPeriod
-        );
+    document
+        .getElementById(
+            "previousPeriod"
+        )
+        .textContent =
+            formatPeriod(
+                previousPeriod
+            );
 
 
-    document.getElementById(
-        "previousHistoryPeriod"
-    ).textContent =
-        formatPeriod(
-            previousPeriod
-        );
+    document
+        .getElementById(
+            "previousHistoryPeriod"
+        )
+        .textContent =
+            formatPeriod(
+                previousPeriod
+            );
 
 
-    document.getElementById(
-        "previousWorkCount"
-    ).textContent =
-        `${previousRecords.length} / 13`;
+    document
+        .getElementById(
+            "previousWorkCount"
+        )
+        .textContent =
+            `${previousRecords.length} / 13`;
 
 
-    document.getElementById(
-        "previousTotalHours"
-    ).textContent =
-        formatMinutes(
-            previousTotal
-        );
+    document
+        .getElementById(
+            "previousTotalRevenue"
+        )
+        .textContent =
+            formatYen(
+                previousRevenue
+            );
 
 
-    // 履歴
+    document
+        .getElementById(
+            "previousAverageRevenue"
+        )
+        .textContent =
+            formatYen(
+                getAverageRevenue(
+                    previousRecords
+                )
+            );
+
+
+    document
+        .getElementById(
+            "previousTotalHours"
+        )
+        .textContent =
+            formatMinutes(
+                previousTotalMinutes
+            );
+
 
     updateHistory(
         currentRecords,
@@ -663,7 +953,9 @@ function updateAllDisplays() {
 // 13勤務目予測
 // ==============================
 
-function updateForecast(records) {
+function updateForecast(
+    records
+) {
 
     const forecast =
         document.getElementById(
@@ -681,7 +973,9 @@ function updateForecast(records) {
         );
 
 
-    if (count === 0) {
+    if (
+        count === 0
+    ) {
 
         forecast.textContent =
             "まだ勤務記録がありません。";
@@ -690,7 +984,9 @@ function updateForecast(records) {
     }
 
 
-    if (count >= 13) {
+    if (
+        count >= 13
+    ) {
 
         const remaining =
             MONTHLY_LIMIT_MINUTES -
@@ -705,7 +1001,9 @@ function updateForecast(records) {
                 </div>
 
                 <div class="forecast-line">
-                    <span>累計拘束時間</span>
+                    <span>
+                        累計拘束時間
+                    </span>
 
                     <strong>
                         ${formatMinutes(
@@ -715,7 +1013,9 @@ function updateForecast(records) {
                 </div>
 
                 <div class="forecast-line">
-                    <span>262時間との差</span>
+                    <span>
+                        262時間との差
+                    </span>
 
                     <strong>
                         ${formatSignedDifference(
@@ -744,7 +1044,9 @@ function updateForecast(records) {
         null;
 
 
-    if (shiftsBeforeFinal > 0) {
+    if (
+        shiftsBeforeFinal > 0
+    ) {
 
         allowedAverage =
             (
@@ -768,9 +1070,11 @@ function updateForecast(records) {
 
     const shiftType =
         Number(
-            document.querySelector(
-                'input[name="finalShiftType"]:checked'
-            ).value
+            document
+                .querySelector(
+                    'input[name="finalShiftType"]:checked'
+                )
+                .value
         );
 
 
@@ -800,9 +1104,7 @@ function updateForecast(records) {
 
         mainMessage =
             shiftType === 15
-
                 ? "現在のペースなら10:00帰庫まで確保できる見込み"
-
                 : "現在のペースなら11:00帰庫まで確保できる見込み";
 
     } else if (
@@ -825,9 +1127,13 @@ function updateForecast(records) {
         "";
 
 
-    if (shiftsBeforeFinal > 0) {
+    if (
+        shiftsBeforeFinal > 0
+    ) {
 
-        if (allowedAverage >= 0) {
+        if (
+            allowedAverage >= 0
+        ) {
 
             adjustmentHtml = `
                 <div class="forecast-line">
@@ -943,24 +1249,29 @@ function updateForecast(records) {
 // 期間
 // ==============================
 
-function getWorkPeriod(date) {
+function getWorkPeriod(
+    date
+) {
 
     const year =
         date.getFullYear();
 
+
     const month =
         date.getMonth();
+
 
     const day =
         date.getDate();
 
 
     let startDate;
-
     let endDate;
 
 
-    if (day >= 16) {
+    if (
+        day >= 16
+    ) {
 
         startDate =
             new Date(
@@ -997,12 +1308,18 @@ function getWorkPeriod(date) {
 
 
     startDate.setHours(
-        0, 0, 0, 0
+        0,
+        0,
+        0,
+        0
     );
 
 
     endDate.setHours(
-        23, 59, 59, 999
+        23,
+        59,
+        59,
+        999
     );
 
 
@@ -1056,7 +1373,6 @@ function filterRecordsByPeriod(
             return (
                 recordDate >=
                     period.startDate &&
-
                 recordDate <=
                     period.endDate
             );
@@ -1066,7 +1382,7 @@ function filterRecordsByPeriod(
 
 
 // ==============================
-// 履歴表示
+// 履歴
 // ==============================
 
 function updateHistory(
@@ -1080,10 +1396,13 @@ function updateHistory(
         );
 
 
-    element.innerHTML = "";
+    element.innerHTML =
+        "";
 
 
-    if (records.length === 0) {
+    if (
+        records.length === 0
+    ) {
 
         element.textContent =
             "勤務記録はありません。";
@@ -1093,193 +1412,198 @@ function updateHistory(
 
 
     const sorted =
-        [...records].sort(
-            (a, b) =>
-                new Date(a.date) -
-                new Date(b.date)
-        );
-
-
-    sorted.forEach(record => {
-
-        const row =
-            document.createElement(
-                "div"
+        [...records]
+            .sort(
+                (a, b) =>
+                    new Date(
+                        a.date
+                    ) -
+                    new Date(
+                        b.date
+                    )
             );
 
 
-        row.className =
-            "history-row";
+    sorted.forEach(
+        record => {
 
-
-        const top =
-            document.createElement(
-                "div"
-            );
-
-
-        top.className =
-            "history-top";
-
-
-        const info =
-            document.createElement(
-                "div"
-            );
-
-
-        info.className =
-            "history-info";
-
-
-        const date =
-            new Date(
-                record.date +
-                "T00:00:00"
-            );
-
-
-        const dateText =
-            `${date.getMonth() + 1}/${date.getDate()}`;
-
-
-        let inputText;
-
-
-        if (
-            record.inputType ===
-            "time"
-        ) {
-
-            inputText =
-                `${record.startTime} → ${record.endTime}`;
-
-        } else {
-
-            inputText =
-                "直接入力";
-        }
-
-
-        info.innerHTML = `
-            <strong>
-                ${dateText}
-            </strong>
-            <br>
-
-            ${inputText}
-            <br>
-
-            ${formatMinutes(
-                record.minutes
-            )}
-        `;
-
-
-        const actions =
-            document.createElement(
-                "div"
-            );
-
-
-        actions.className =
-            "history-actions";
-
-
-        // 修正
-        const editButton =
-            document.createElement(
-                "button"
-            );
-
-
-        editButton.textContent =
-            "修正";
-
-
-        editButton.className =
-            "edit-button";
-
-
-        editButton.addEventListener(
-            "click",
-            () => {
-
-                showEditForm(
-                    row,
-                    record
+            const row =
+                document.createElement(
+                    "div"
                 );
-            }
-        );
 
 
-        // 削除
-        const deleteButton =
-            document.createElement(
-                "button"
-            );
+            row.className =
+                "history-row";
 
 
-        deleteButton.textContent =
-            "削除";
+            const top =
+                document.createElement(
+                    "div"
+                );
 
 
-        deleteButton.className =
-            "delete-button";
+            top.className =
+                "history-top";
 
 
-        deleteButton.addEventListener(
-            "click",
-            () => {
+            const info =
+                document.createElement(
+                    "div"
+                );
 
-                const result =
-                    confirm(
-                        `${dateText}の勤務記録を削除しますか？`
+
+            info.className =
+                "history-info";
+
+
+            const date =
+                new Date(
+                    record.date +
+                    "T00:00:00"
+                );
+
+
+            const dateText =
+                formatHistoryDate(
+                    date
+                );
+
+
+            info.innerHTML = `
+                <div class="history-date">
+                    ${dateText}
+                </div>
+
+                <div class="history-detail">
+
+                    <span>
+                        営収
+                    </span>
+
+                    <strong class="history-revenue">
+                        ${formatYen(
+                            record.revenue
+                        )}
+                    </strong>
+
+                    <span>
+                        拘束時間
+                    </span>
+
+                    <strong>
+                        ${formatMinutes(
+                            record.minutes
+                        )}
+                    </strong>
+
+                </div>
+            `;
+
+
+            const actions =
+                document.createElement(
+                    "div"
+                );
+
+
+            actions.className =
+                "history-actions";
+
+
+            const editButton =
+                document.createElement(
+                    "button"
+                );
+
+
+            editButton.textContent =
+                "修正";
+
+
+            editButton.className =
+                "edit-button";
+
+
+            editButton.addEventListener(
+                "click",
+                () => {
+
+                    showEditForm(
+                        row,
+                        record
                     );
-
-
-                if (!result) {
-
-                    return;
                 }
+            );
 
 
-                deleteRecord(
-                    record
+            const deleteButton =
+                document.createElement(
+                    "button"
                 );
-            }
-        );
 
 
-        actions.appendChild(
-            editButton
-        );
+            deleteButton.textContent =
+                "削除";
 
 
-        actions.appendChild(
-            deleteButton
-        );
+            deleteButton.className =
+                "delete-button";
 
 
-        top.appendChild(
-            info
-        );
+            deleteButton.addEventListener(
+                "click",
+                () => {
+
+                    const result =
+                        confirm(
+                            `${dateText}の勤務記録を削除しますか？`
+                        );
 
 
-        top.appendChild(
-            actions
-        );
+                    if (!result) {
+
+                        return;
+                    }
 
 
-        row.appendChild(
-            top
-        );
+                    deleteRecord(
+                        record
+                    );
+                }
+            );
 
 
-        element.appendChild(
-            row
-        );
-    });
+            actions.appendChild(
+                editButton
+            );
+
+
+            actions.appendChild(
+                deleteButton
+            );
+
+
+            top.appendChild(
+                info
+            );
+
+
+            top.appendChild(
+                actions
+            );
+
+
+            row.appendChild(
+                top
+            );
+
+
+            element.appendChild(
+                row
+            );
+        }
+    );
 }
 
 
@@ -1292,7 +1616,6 @@ function showEditForm(
     record
 ) {
 
-    // すでに開いていたら何もしない
     if (
         row.querySelector(
             ".edit-form"
@@ -1301,6 +1624,18 @@ function showEditForm(
 
         return;
     }
+
+
+    const hours =
+        Math.floor(
+            record.minutes /
+            60
+        );
+
+
+    const mins =
+        record.minutes %
+        60;
 
 
     const form =
@@ -1313,378 +1648,197 @@ function showEditForm(
         "edit-form";
 
 
-    // ==========================
-    // 直接入力記録
-    // ==========================
+    form.innerHTML = `
+        <label>
+            勤務日
+        </label>
 
-    if (
-        record.inputType !==
-        "time"
-    ) {
-
-        const hours =
-            Math.floor(
-                record.minutes / 60
-            );
+        <input
+            type="date"
+            class="edit-date"
+            value="${record.date}"
+        >
 
 
-        const mins =
-            record.minutes % 60;
+        <label>
+            営収
+        </label>
+
+        <input
+            type="number"
+            class="edit-revenue"
+            min="0"
+            inputmode="numeric"
+            value="${record.revenue}"
+        >
 
 
-        form.innerHTML = `
-            <label>
-                勤務日
-            </label>
+        <label>
+            拘束時間
+        </label>
+
+        <div class="edit-duration">
 
             <input
-                type="date"
-                class="edit-date"
-                value="${record.date}"
+                type="number"
+                class="edit-hours"
+                min="0"
+                max="30"
+                inputmode="numeric"
+                value="${hours}"
             >
 
-            <label>
-                拘束時間
-            </label>
+            <span>
+                時間
+            </span>
 
-            <div class="edit-duration">
+            <input
+                type="number"
+                class="edit-minutes"
+                min="0"
+                max="59"
+                inputmode="numeric"
+                value="${mins}"
+            >
 
-                <input
-                    type="number"
-                    class="edit-hours"
-                    min="0"
-                    max="30"
-                    inputmode="numeric"
-                    value="${hours}"
-                >
+            <span>
+                分
+            </span>
 
-                <span>時間</span>
-
-                <input
-                    type="number"
-                    class="edit-minutes"
-                    min="0"
-                    max="59"
-                    inputmode="numeric"
-                    value="${mins}"
-                >
-
-                <span>分</span>
-
-            </div>
-
-            <div class="edit-actions">
-
-                <button
-                    class="edit-save-button"
-                >
-                    修正を保存
-                </button>
-
-                <button
-                    class="edit-cancel-button"
-                >
-                    キャンセル
-                </button>
-
-            </div>
-        `;
+        </div>
 
 
-        form
-            .querySelector(
-                ".edit-save-button"
-            )
-            .addEventListener(
-                "click",
-                () => {
+        <div class="edit-actions">
 
-                    const newDate =
-                        form.querySelector(
+            <button
+                class="edit-save-button"
+            >
+                修正を保存
+            </button>
+
+            <button
+                class="edit-cancel-button"
+            >
+                キャンセル
+            </button>
+
+        </div>
+    `;
+
+
+    form
+        .querySelector(
+            ".edit-save-button"
+        )
+        .addEventListener(
+            "click",
+            () => {
+
+                const newDate =
+                    form
+                        .querySelector(
                             ".edit-date"
-                        ).value;
-
-
-                    const hoursValue =
-                        form.querySelector(
-                            ".edit-hours"
-                        ).value;
-
-
-                    const minutesValue =
-                        form.querySelector(
-                            ".edit-minutes"
-                        ).value;
-
-
-                    const newHours =
-                        Number(
-                            hoursValue
-                        );
-
-
-                    const newMinutes =
-                        Number(
-                            minutesValue
-                        );
-
-
-                    if (
-                        !newDate ||
-                        hoursValue === "" ||
-                        minutesValue === "" ||
-                        !Number.isFinite(
-                            newHours
-                        ) ||
-                        !Number.isFinite(
-                            newMinutes
-                        ) ||
-                        newHours < 0 ||
-                        newMinutes < 0 ||
-                        newMinutes > 59 ||
-                        (
-                            newHours === 0 &&
-                            newMinutes === 0
                         )
-                    ) {
-
-                        alert(
-                            "入力内容を確認してください。"
-                        );
-
-                        return;
-                    }
+                        .value;
 
 
-                    const total =
-                        newHours * 60 +
-                        newMinutes;
+                const revenueValue =
+                    form
+                        .querySelector(
+                            ".edit-revenue"
+                        )
+                        .value;
 
 
-                    updateRecord(
-                        record,
-                        {
-                            date:
-                                newDate,
+                const hoursValue =
+                    form
+                        .querySelector(
+                            ".edit-hours"
+                        )
+                        .value;
 
-                            inputType:
-                                "direct",
 
-                            startTime:
-                                null,
+                const minutesValue =
+                    form
+                        .querySelector(
+                            ".edit-minutes"
+                        )
+                        .value;
 
-                            endTime:
-                                null,
 
-                            minutes:
-                                total
-                        }
+                const newRevenue =
+                    Number(
+                        revenueValue
                     );
+
+
+                const newHours =
+                    Number(
+                        hoursValue
+                    );
+
+
+                const newMinutes =
+                    Number(
+                        minutesValue
+                    );
+
+
+                if (
+                    !newDate ||
+                    revenueValue === "" ||
+                    hoursValue === "" ||
+                    minutesValue === "" ||
+                    !Number.isFinite(
+                        newRevenue
+                    ) ||
+                    !Number.isFinite(
+                        newHours
+                    ) ||
+                    !Number.isFinite(
+                        newMinutes
+                    ) ||
+                    newRevenue < 0 ||
+                    newHours < 0 ||
+                    newMinutes < 0 ||
+                    newMinutes > 59 ||
+                    (
+                        newHours === 0 &&
+                        newMinutes === 0
+                    )
+                ) {
+
+                    alert(
+                        "入力内容を確認してください。"
+                    );
+
+                    return;
                 }
-            );
-
-    }
 
 
-    // ==========================
-    // 出庫帰庫記録
-    // ==========================
-
-    else {
-
-        form.innerHTML = `
-            <label>
-                勤務日
-            </label>
-
-            <input
-                type="date"
-                class="edit-date"
-                value="${record.date}"
-            >
-
-            <label>
-                出庫時刻
-            </label>
-
-            <input
-                type="time"
-                class="edit-start"
-                value="${record.startTime}"
-            >
-
-            <label>
-                帰庫時刻
-            </label>
-
-            <input
-                type="time"
-                class="edit-end"
-                value="${record.endTime}"
-            >
-
-            <div class="edit-time-result">
-
-                <span>
-                    拘束時間
-                </span>
-
-                <strong
-                    class="edit-calculated"
-                >
-                    ${formatMinutes(
-                        record.minutes
-                    )}
-                </strong>
-
-            </div>
-
-            <div class="edit-actions">
-
-                <button
-                    class="edit-save-button"
-                >
-                    修正を保存
-                </button>
-
-                <button
-                    class="edit-cancel-button"
-                >
-                    キャンセル
-                </button>
-
-            </div>
-        `;
+                const totalMinutes =
+                    newHours * 60 +
+                    newMinutes;
 
 
-        const startInput =
-            form.querySelector(
-                ".edit-start"
-            );
+                updateRecord(
+                    record.id,
+                    {
+                        date:
+                            newDate,
 
+                        revenue:
+                            Math.round(
+                                newRevenue
+                            ),
 
-        const endInput =
-            form.querySelector(
-                ".edit-end"
-            );
-
-
-        const calculated =
-            form.querySelector(
-                ".edit-calculated"
-            );
-
-
-        function updateEditCalculation() {
-
-            if (
-                !startInput.value ||
-                !endInput.value
-            ) {
-
-                calculated.textContent =
-                    "--";
-
-                return;
+                        minutes:
+                            totalMinutes
+                    }
+                );
             }
-
-
-            const minutes =
-                calculateWorkMinutes(
-                    startInput.value,
-                    endInput.value
-                );
-
-
-            calculated.textContent =
-                formatMinutes(
-                    minutes
-                );
-        }
-
-
-        startInput.addEventListener(
-            "input",
-            updateEditCalculation
         );
 
-
-        endInput.addEventListener(
-            "input",
-            updateEditCalculation
-        );
-
-
-        form
-            .querySelector(
-                ".edit-save-button"
-            )
-            .addEventListener(
-                "click",
-                () => {
-
-                    const newDate =
-                        form.querySelector(
-                            ".edit-date"
-                        ).value;
-
-
-                    const newStart =
-                        startInput.value;
-
-
-                    const newEnd =
-                        endInput.value;
-
-
-                    if (
-                        !newDate ||
-                        !newStart ||
-                        !newEnd
-                    ) {
-
-                        alert(
-                            "入力内容を確認してください。"
-                        );
-
-                        return;
-                    }
-
-
-                    const newMinutes =
-                        calculateWorkMinutes(
-                            newStart,
-                            newEnd
-                        );
-
-
-                    updateRecord(
-                        record,
-                        {
-                            date:
-                                newDate,
-
-                            inputType:
-                                "time",
-
-                            startTime:
-                                newStart,
-
-                            endTime:
-                                newEnd,
-
-                            minutes:
-                                newMinutes
-                        }
-                    );
-                }
-            );
-    }
-
-
-    // ==========================
-    // キャンセル
-    // ==========================
 
     form
         .querySelector(
@@ -1710,7 +1864,7 @@ function showEditForm(
 // ==============================
 
 function updateRecord(
-    targetRecord,
+    id,
     newValues
 ) {
 
@@ -1718,14 +1872,16 @@ function updateRecord(
         getAllRecords();
 
 
-    let index =
-        findRecordIndex(
-            records,
-            targetRecord
+    const index =
+        records.findIndex(
+            record =>
+                record.id === id
         );
 
 
-    if (index === -1) {
+    if (
+        index === -1
+    ) {
 
         alert(
             "修正する勤務記録が見つかりません。"
@@ -1735,22 +1891,29 @@ function updateRecord(
     }
 
 
-    records[index] = {
+    const duplicate =
+        records.some(
+            record =>
+                record.id !== id &&
+                record.date ===
+                    newValues.date
+        );
 
-        ...records[index],
 
-        ...newValues
+    if (duplicate) {
 
-    };
+        alert(
+            "同じ勤務日の記録がすでにあります。"
+        );
 
-
-    // 古いデータにIDがなければ
-    // 修正時にIDを付与
-    if (!records[index].id) {
-
-        records[index].id =
-            Date.now();
+        return;
     }
+
+
+    records[index] = {
+        ...records[index],
+        ...newValues
+    };
 
 
     saveAllRecords(
@@ -1779,71 +1942,20 @@ function deleteRecord(
         getAllRecords();
 
 
-    const index =
-        findRecordIndex(
-            records,
-            targetRecord
+    const filtered =
+        records.filter(
+            record =>
+                record.id !==
+                targetRecord.id
         );
 
 
-    if (index === -1) {
-
-        return;
-    }
-
-
-    records.splice(
-        index,
-        1
-    );
-
-
     saveAllRecords(
-        records
+        filtered
     );
 
 
     updateAllDisplays();
-}
-
-
-// ==============================
-// 記録検索
-// ==============================
-
-function findRecordIndex(
-    records,
-    targetRecord
-) {
-
-    // IDあり
-    if (targetRecord.id) {
-
-        const index =
-            records.findIndex(
-                record =>
-                    record.id ===
-                    targetRecord.id
-            );
-
-
-        if (index !== -1) {
-
-            return index;
-        }
-    }
-
-
-    // 古いテストデータ
-    return records.findIndex(
-        record =>
-
-            record.date ===
-                targetRecord.date &&
-
-            record.minutes ===
-                targetRecord.minutes
-    );
 }
 
 
@@ -1853,13 +1965,62 @@ function findRecordIndex(
 
 function getAllRecords() {
 
-    return (
-        JSON.parse(
+    try {
+
+        const value =
             localStorage.getItem(
-                "workRecords"
+                STORAGE_KEY
+            );
+
+
+        if (!value) {
+
+            return [];
+        }
+
+
+        const records =
+            JSON.parse(
+                value
+            );
+
+
+        if (
+            !Array.isArray(
+                records
             )
-        ) || []
-    );
+        ) {
+
+            return [];
+        }
+
+
+        return records.filter(
+            record =>
+                record &&
+                typeof record.date ===
+                    "string" &&
+                Number.isFinite(
+                    Number(
+                        record.revenue
+                    )
+                ) &&
+                Number.isFinite(
+                    Number(
+                        record.minutes
+                    )
+                )
+        );
+
+    } catch (error) {
+
+        console.error(
+            "勤務記録の読み込みに失敗しました。",
+            error
+        );
+
+        return [];
+    }
 }
 
 
@@ -1868,14 +2029,16 @@ function saveAllRecords(
 ) {
 
     localStorage.setItem(
-        "workRecords",
-        JSON.stringify(records)
+        STORAGE_KEY,
+        JSON.stringify(
+            records
+        )
     );
 }
 
 
 // ==============================
-// 合計
+// 集計
 // ==============================
 
 function getTotalMinutes(
@@ -1883,9 +2046,54 @@ function getTotalMinutes(
 ) {
 
     return records.reduce(
-        (sum, record) =>
-            sum + record.minutes,
+        (
+            sum,
+            record
+        ) =>
+            sum +
+            Number(
+                record.minutes
+            ),
         0
+    );
+}
+
+
+function getTotalRevenue(
+    records
+) {
+
+    return records.reduce(
+        (
+            sum,
+            record
+        ) =>
+            sum +
+            Number(
+                record.revenue
+            ),
+        0
+    );
+}
+
+
+function getAverageRevenue(
+    records
+) {
+
+    if (
+        records.length === 0
+    ) {
+
+        return 0;
+    }
+
+
+    return Math.round(
+        getTotalRevenue(
+            records
+        ) /
+        records.length
     );
 }
 
@@ -1899,7 +2107,9 @@ function formatMinutes(
 ) {
 
     const rounded =
-        Math.round(minutes);
+        Math.round(
+            minutes
+        );
 
 
     const negative =
@@ -1907,17 +2117,21 @@ function formatMinutes(
 
 
     const absolute =
-        Math.abs(rounded);
+        Math.abs(
+            rounded
+        );
 
 
     const hours =
         Math.floor(
-            absolute / 60
+            absolute /
+            60
         );
 
 
     const mins =
-        absolute % 60;
+        absolute %
+        60;
 
 
     const text =
@@ -1935,11 +2149,28 @@ function formatMinutes(
 }
 
 
+function formatYen(
+    value
+) {
+
+    return (
+        "¥" +
+        Math.round(
+            Number(value) || 0
+        ).toLocaleString(
+            "ja-JP"
+        )
+    );
+}
+
+
 function formatSignedDifference(
     minutes
 ) {
 
-    if (minutes >= 0) {
+    if (
+        minutes >= 0
+    ) {
 
         return (
             `残り ${formatMinutes(
@@ -1982,30 +2213,32 @@ function formatClockTime(
 
     const hour =
         Math.floor(
-            value / 60
+            value /
+            60
         );
 
 
     const minute =
-        value % 60;
+        value %
+        60;
 
 
     return (
-        `${String(hour).padStart(
+        `${String(
+            hour
+        ).padStart(
             2,
             "0"
         )}:` +
-        `${String(minute).padStart(
+        `${String(
+            minute
+        ).padStart(
             2,
             "0"
         )}`
     );
 }
 
-
-// ==============================
-// 期間表示
-// ==============================
 
 function formatPeriod(
     period
@@ -2035,50 +2268,35 @@ function formatDate(
 }
 
 
+function formatHistoryDate(
+    date
+) {
+
+    const weekdays = [
+        "日",
+        "月",
+        "火",
+        "水",
+        "木",
+        "金",
+        "土"
+    ];
+
+
+    return (
+        `${date.getMonth() + 1}/` +
+        `${date.getDate()}` +
+        `（${weekdays[
+            date.getDay()
+        ]}）`
+    );
+}
+
+
 // ==============================
 // 起動
 // ==============================
 
-updateAllDisplays();
-
-/* ==========================
-   勤務日表示
-   ========================== */
-
-const workDateInput =
-    document.getElementById("workDate");
-
-const workDateText =
-    document.getElementById("workDateText");
-
-
-function updateWorkDateDisplay() {
-
-    if (!workDateInput.value) {
-
-        workDateText.textContent =
-            "日付を選択";
-
-        return;
-    }
-
-
-    const [
-        year,
-        month,
-        day
-    ] = workDateInput.value.split("-");
-
-
-    workDateText.textContent =
-        `${year}/${month}/${day}`;
-}
-
-
-workDateInput.addEventListener(
-    "change",
-    updateWorkDateDisplay
-);
-
-
 updateWorkDateDisplay();
+
+updateAllDisplays();
