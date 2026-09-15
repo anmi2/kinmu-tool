@@ -19,8 +19,30 @@
 
         <h2>勤務を記録</h2>
 
-        <label for="workDate">勤務日</label>
-        <input type="date" id="workDate">
+       <label for="workDate">勤務日</label>
+
+<div class="date-picker-wrap">
+
+    <div
+        class="date-picker-display"
+        id="workDateDisplay"
+    >
+        <span id="workDateText">
+            日付を選択
+        </span>
+
+        <span class="date-picker-icon">
+            📅
+        </span>
+    </div>
+
+    <input
+        type="date"
+        id="workDate"
+        class="date-picker-native"
+    >
+
+</div>
 
 
         <div class="input-type">
