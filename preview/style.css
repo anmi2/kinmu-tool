@@ -23,3 +23,6 @@ html[lang="ja"] .hero-intro{line-height:2}
 
 /* Creator credit */
 .creator-credit{display:block;margin-top:2px;font-family:'DM Sans',Arial,sans-serif;font-size:12px;font-weight:500;letter-spacing:.12em;color:#92714d}
+
+.footer-links{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.footer-links a:hover,.footer-links a:focus-visible{color:#f0bd69;text-decoration:underline;text-underline-offset:4px}
