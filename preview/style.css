@@ -20,3 +20,6 @@ html[lang="ja"] body{font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Hir
 html[lang="ja"] .project-info p{line-height:1.9}
 html[lang="ja"] .hero-intro{line-height:2}
 @media(max-width:700px){.lang-switch button{min-width:30px}}
+
+/* Creator credit */
+.creator-credit{display:block;margin-top:2px;font-family:'DM Sans',Arial,sans-serif;font-size:12px;font-weight:500;letter-spacing:.12em;color:#92714d}
