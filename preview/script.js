@@ -50,6 +50,7 @@
       });
     }
     extras.forEach(({ el, en, jp }) => { if (el.isConnected) el.textContent = ja ? jp : en; });
+    document.querySelectorAll('[data-jp-link][data-en-link]').forEach(el => { el.textContent = ja ? el.dataset.jpLink : el.dataset.enLink; });
     document.documentElement.lang = ja ? 'ja' : 'en';
     switcher.querySelectorAll('button').forEach(button => {
       button.setAttribute('aria-pressed', String(button.dataset.lang === language));
