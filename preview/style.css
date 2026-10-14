@@ -13,17 +13,10 @@
 @media(max-width:460px){.project-grid{grid-template-columns:1fr;gap:16px}.project-art{height:210px}.project-info p{min-height:0}.script-logo{font-size:clamp(78px,19vw,100px)}.tagline-line p{font-size:16px}.hero{padding-top:43px}.hero-visual{min-height:225px}.github-link svg{width:18px}.lang-switch button{min-width:27px;padding:5px}.top-nav{gap:17px}.brand-name{font-size:19px}.header-actions{gap:9px}.section{padding-left:20px;padding-right:20px}.closing{padding:62px 20px 72px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
 
-/* Bilingual reading notes: preserve original English typography and spacing. */
-
-
-/* V3: all Japanese translations are contextual overlays. */
-.hint-caption{font-size:10px;letter-spacing:.16em;color:#a77b45;border:1px solid #d9bd91;border-radius:20px;padding:6px 10px;white-space:nowrap}
-.translation-target{position:relative;cursor:help;outline-offset:4px}
-.translation-target:focus-visible{outline:2px solid #b58032;border-radius:3px}
-.translation-target[data-jp]::after{content:attr(data-jp);position:absolute;z-index:80;left:0;top:calc(100% + 9px);width:max-content;max-width:min(330px,82vw);box-sizing:border-box;white-space:normal;background:rgba(65,39,22,.97);color:#fff6e6;border:1px solid #c39352;border-radius:9px;padding:11px 14px;font:400 12px/1.7 -apple-system,BlinkMacSystemFont,'Hiragino Kaku Gothic ProN',sans-serif;letter-spacing:.025em;box-shadow:0 14px 32px rgba(44,27,10,.2);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .16s ease}
-.translation-target[data-jp]:hover::after,.translation-target[data-jp]:focus-visible::after,.translation-target.show-translation::after{opacity:1;visibility:visible}
-.translation-target[data-jp]::before{content:'';position:absolute;left:16px;top:calc(100% + 3px);border:6px solid transparent;border-bottom-color:#875928;z-index:81;opacity:0;visibility:hidden}
-.translation-target[data-jp]:hover::before,.translation-target[data-jp]:focus-visible::before,.translation-target.show-translation::before{opacity:1;visibility:visible}
-/* Avoid forcing narrow screens to scroll sideways for translated tooltips. */
-@media(max-width:700px){.translation-target[data-jp]::after{max-width:min(270px,76vw);font-size:12px}.hero-copy .translation-target[data-jp]::after{max-width:76vw}.hint-caption{font-size:9px;padding:5px 7px}}
-@media(hover:none){.translation-target[data-jp]:hover::after,.translation-target[data-jp]:hover::before{opacity:0;visibility:hidden}.translation-target.show-translation::after,.translation-target.show-translation::before{opacity:1;visibility:visible}}
+/* V4: global language switch; no per-text translation overlays. */
+.lang-switch{flex:none}
+.lang-switch button:focus-visible{outline:2px solid #b58032;outline-offset:3px}
+html[lang="ja"] body{font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif}
+html[lang="ja"] .project-info p{line-height:1.9}
+html[lang="ja"] .hero-intro{line-height:2}
+@media(max-width:700px){.lang-switch button{min-width:30px}}
