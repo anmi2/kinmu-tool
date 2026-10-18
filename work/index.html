@@ -26,6 +26,17 @@
 
 <main class="container">
 
+    <!-- 旧ツールの端末データを守るための移行案内 -->
+    <section aria-label="NextGuessへの移行案内" style="background:#f2f9f4;border:1px solid #badbc6;border-radius:12px;padding:16px;margin:12px 0 22px;line-height:1.75;">
+        <h2 style="font-size:18px;margin:0 0 8px;">NextGuessへの移行について</h2>
+        <p style="margin:0 0 10px;font-size:14px;">このツールの勤務・営収記録は、この端末のブラウザに保存されています。NextGuessへは自動で引き継がれません。移行方法は準備中です。</p>
+        <p style="margin:0 0 12px;font-size:14px;"><strong>移行が完了するまで、サイトデータの削除、ブラウザの履歴・データの一括消去、アプリとして追加した旧ツールの削除は控えてください。</strong> いつも記録している同じ端末・ブラウザから、下のボタンでバックアップを保存できます。</p>
+        <button id="exportWorkRecords" type="button" style="display:block;width:100%;min-height:46px;background:#177b48;border:0;border-radius:9px;color:#fff;font-weight:800;font-size:15px;cursor:pointer;">勤務・営収データをバックアップ保存（JSON）</button>
+        <p id="exportWorkRecordsStatus" role="status" aria-live="polite" style="font-size:13px;margin:9px 0 0;"></p>
+        <p style="margin:10px 0 0;font-size:12px;">※バックアップには勤務日・営収などが含まれます。オープンチャットには添付せず、ご自身で安全に保管してください。ダウンロードは記録の削除や変更を行いません。</p>
+        <p style="margin:9px 0 0;font-size:13px;"><a href="https://anmi2.github.io/nextguess-site/" target="_blank" rel="noopener noreferrer">NextGuess公式サイト・移行情報はこちら ↗</a></p>
+    </section>
+
     <h1>
         勤務管理<span class="title-dot">.</span>
     </h1>
@@ -622,6 +633,7 @@
 
 
 <script src="script.js?v=4"></script>
+<script src="backup-export.js?v=1"></script>
 
 </body>
 
